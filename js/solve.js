@@ -1,11 +1,12 @@
 $(function(){
 
     var canvas = $("#game-panel")[0];
-    var ctx = canvas.getContext("2d");
+    var context = canvas.getContext("2d");
 
-    canvas.width = 800;
+    var coin = new Image();
+    coin.src = "images/coin.png";
 
-    ctx.fillStyle = "red";
+    //ctx.fillStyle = "red";
 
     var keys = {
         top: false,
@@ -36,8 +37,8 @@ $(function(){
     };
 
     var player = {
-        width: 40,
-        height: 70,
+        width: 50,
+        height: 50,
         x: map.width/2,
         y: map.height/2,
         step: 5,
@@ -49,14 +50,18 @@ $(function(){
         }
     };
 
-    function Sprite(context, image, x, y, width, height, gap, tricksPerFrame, numberOfFrames){
+    player.x -= player.width/2;
+    player.y -= player.height/2;
+    player.sprite = new Sprite(context, coin, player, 1000, 100, 0, 3, 10);
 
+
+    function Sprite(context, image, player, width, height, gap, ticksPerFrame, numberOfFrames){
         this.context = context;
         this.image = image;
-        this.x = x;
-        this.y = y;
+        this.player = player;
         this.width = width;
         this.height = height;
+        this.frameWidth = width/numberOfFrames;
 
         this.frameIndex = 0;
         this.tickCount = 0;
@@ -67,31 +72,41 @@ $(function(){
 
             this.tickCount++;
 
-            if(tickCount > ticksPerFrame){
+            if(this.tickCount > this.ticksPerFrame){
 
-                tickCount = 0;
+                this.tickCount = 0;
 
-                if(frameIndex < numberOfFrames - 1){
-                    frameIndex++;
+                if(this.frameIndex < this.numberOfFrames - 1){
+                    this.frameIndex++;
                 } else {
-                    frameIndex = 0;
+                    this.frameIndex = 0;
                 }
             }
         }
 
         this.render = function(){
-            //TODO
+            this.context.drawImage(
+                this.image,
+                this.frameIndex * this.width/this.numberOfFrames,
+                0,
+                this.frameWidth,
+                this.height,
+                player.x,
+                player.y,
+                player.width,
+                player.height
+            );
         }
     }
 
-    player.x -= player.width/2;
-    player.y -= player.height/2;
-
     function draw(){
         player.updatePosition();
-        ctx.clearRect(0, 0, map.width, map.height);
+        context.clearRect(0, 0, map.width, map.height);
 
-        ctx.fillRect(player.x, player.y, player.width, player.height);
+        //context.fillRect(player.x, player.y, player.width, player.height);
+        player.sprite.update();
+        player.sprite.render();
+
 
         requestAnimationFrame(draw);
     }
@@ -104,6 +119,8 @@ $(function(){
         return false;
     });
 
-    requestAnimationFrame(draw);
+    //coin.onload = function(){
+        requestAnimationFrame(draw);
+    //};
 
 });
