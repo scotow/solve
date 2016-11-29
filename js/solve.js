@@ -3,10 +3,26 @@ $(function(){
     var canvas = $("#game-panel")[0];
     var context = canvas.getContext("2d");
 
-    var coin = new Image();
-    coin.src = "images/coin.png";
+    var images = {};
+    var imagesToLoad = ["stand", "top", "right", "down", "left"];
 
-    //ctx.fillStyle = "red";
+    function loadImage(name){
+        var image = new Image();
+        image.src = "images/" + name + ".png";
+        images[name] = image;
+
+        image.onload = function(){
+            imagesToLoad.shift();
+            if(!imagesToLoad.length){
+                $(canvas).removeClass("hidden");
+                requestAnimationFrame(draw);
+            }
+        }
+    }
+
+    imagesToLoad.forEach(function(name){
+        loadImage(name);
+    });
 
     var keys = {
         top: false,
@@ -38,24 +54,45 @@ $(function(){
 
     var player = {
         width: 50,
-        height: 50,
+        height: 60,
         x: map.width/2,
         y: map.height/2,
         step: 5,
         updatePosition: function(){
-            if(keys.top) this.y = Math.max(this.y - this.step, 0);
-            if(keys.left) this.x = Math.max(this.x - this.step, 0);
-            if(keys.down) this.y = Math.min(this.y + this.step, map.height - this.height);
-            if(keys.right) this.x = Math.min(this.x + this.step, map.width - this.width);
+            this.currentSprite = this.sprites.stand;
+            if(keys.top && !keys.down){
+                this.y = Math.max(this.y - this.step, 0);
+                this.currentSprite = this.sprites.top;
+            }
+            if(keys.down && !keys.top){
+                this.y = Math.min(this.y + this.step, map.height - this.height);
+                this.currentSprite = this.sprites.down;
+            }
+            if(keys.right && !keys.left){
+                this.x = Math.min(this.x + this.step, map.width - this.width);
+                this.currentSprite = this.sprites.right;
+            }
+            if(keys.left && !keys.right){
+                this.x = Math.max(this.x - this.step, 0);
+                this.currentSprite = this.sprites.left;
+            }
         }
     };
 
     player.x -= player.width/2;
     player.y -= player.height/2;
-    player.sprite = new Sprite(context, coin, player, 1000, 100, 0, 3, 10);
+
+    player.sprites = {
+        stand: new Sprite(context, images.stand, player, 23, 30, 0, 1),
+        top: new Sprite(context, images.top, player, 69, 30, 3, 3),
+        right: new Sprite(context, images.right, player, 51, 30, 3, 3),
+        down: new Sprite(context, images.down, player, 69, 30, 3, 3),
+        left: new Sprite(context, images.left, player, 51, 30, 3, 3)
+    };
+    player.currentSprite = player.sprites.stand;
 
 
-    function Sprite(context, image, player, width, height, gap, ticksPerFrame, numberOfFrames){
+    function Sprite(context, image, player, width, height, ticksPerFrame, numberOfFrames){
         this.context = context;
         this.image = image;
         this.player = player;
@@ -82,30 +119,29 @@ $(function(){
                     this.frameIndex = 0;
                 }
             }
-        }
+        };
 
         this.render = function(){
             this.context.drawImage(
                 this.image,
-                this.frameIndex * this.width/this.numberOfFrames,
+                this.frameIndex * this.frameWidth,
                 0,
                 this.frameWidth,
                 this.height,
-                player.x,
-                player.y,
-                player.width,
-                player.height
+                this.player.x,
+                this.player.y,
+                this.player.width,
+                this.player.height
             );
-        }
+        };
     }
 
     function draw(){
+        context.clearRect(player.x, player.y, player.width, player.height);
         player.updatePosition();
-        context.clearRect(0, 0, map.width, map.height);
 
-        //context.fillRect(player.x, player.y, player.width, player.height);
-        player.sprite.update();
-        player.sprite.render();
+        player.currentSprite.update();
+        player.currentSprite.render();
 
 
         requestAnimationFrame(draw);
@@ -118,9 +154,5 @@ $(function(){
         keys.update(event.which, false);
         return false;
     });
-
-    //coin.onload = function(){
-        requestAnimationFrame(draw);
-    //};
 
 });
