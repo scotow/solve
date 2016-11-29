@@ -49,6 +49,41 @@ $(function(){
         }
     };
 
+    function Sprite(context, image, x, y, width, height, gap, tricksPerFrame, numberOfFrames){
+
+        this.context = context;
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        this.frameIndex = 0;
+        this.tickCount = 0;
+        this.ticksPerFrame = ticksPerFrame || 0;
+        this.numberOfFrames = numberOfFrames || 1;
+
+        this.update = function(){
+
+            this.tickCount++;
+
+            if(tickCount > ticksPerFrame){
+
+                tickCount = 0;
+
+                if(frameIndex < numberOfFrames - 1){
+                    frameIndex++;
+                } else {
+                    frameIndex = 0;
+                }
+            }
+        }
+
+        this.render = function(){
+            //TODO
+        }
+    }
+
     player.x -= player.width/2;
     player.y -= player.height/2;
 
@@ -60,7 +95,7 @@ $(function(){
 
         requestAnimationFrame(draw);
     }
-    
+
     $(window).keydown(function(event){
         keys.update(event.which, true);
         return false;
