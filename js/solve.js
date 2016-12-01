@@ -63,6 +63,7 @@ $(function(){
         y: map.height/2,
         step: 5,
         updatePosition: function(){
+            console.log(this.x,this.y);
             this.currentSprite = this.sprites.stand;
             if(keys.sprint){
                 this.step = 10;
@@ -88,8 +89,8 @@ $(function(){
         }
     };
 
-    player.x -= player.width/2;
-    player.y -= player.height/2;
+    player.x = Math.round(player.x - player.width/2);
+    player.y = Math.round(player.y - player.height/2);
 
     player.sprites = {
         stand: new Sprite(context, images.stand, player, 23, 30, 0, 1),
