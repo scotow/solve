@@ -57,8 +57,8 @@ $(function(){
     };
 
     var player = {
-        width: 50,
-        height: 60,
+        width: 75,
+        height: 90,
         x: map.width/2,
         y: map.height/2,
         step: 5,

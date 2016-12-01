@@ -29,8 +29,9 @@ body {
 
 #game-panel {
     border: 2px solid darkgray;
-    background: url("../images/bg.png");
+    background: url("../images/bg.png") no-repeat;
     background-size: contain;
+    background-position: center;
     box-shadow: 0 0 20px black;
 
     -webkit-transition: opacity 1000ms;
