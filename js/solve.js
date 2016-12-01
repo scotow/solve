@@ -29,8 +29,12 @@ $(function(){
         left: false,
         down: false,
         right: false,
+        sprint: false,
         update: function(keyCode, state){
             switch(keyCode){
+                case 16:
+                    keys.sprint = state;
+                    break;
                 case 37:
                     keys.left = state;
                     break;
@@ -60,6 +64,11 @@ $(function(){
         step: 5,
         updatePosition: function(){
             this.currentSprite = this.sprites.stand;
+            if(keys.sprint){
+                this.step = 10;
+            }else{
+                this.step = 5;
+            }
             if(keys.top && !keys.down){
                 this.y = Math.max(this.y - this.step, 0);
                 this.currentSprite = this.sprites.top;
@@ -142,7 +151,6 @@ $(function(){
 
         player.currentSprite.update();
         player.currentSprite.render();
-
 
         requestAnimationFrame(draw);
     }
