@@ -53,8 +53,17 @@ $(function(){
 
     var map = {
         width: canvas.width,
-        height: canvas.height
-        shapes: []
+        height: canvas.height,
+        shapes: [
+            new Shape(58, 47, 290, 347),
+            new Shape(348, 107, 180, 287),
+            new Shape(58, 387, 50, 66)
+        ],
+        isAllowed: function(x, y){
+            return this.shapes.some(function(shape){
+                 return shape.isInside(x, y);
+            });
+        }
     };
 
     function Shape(x, y, width, height){
@@ -63,16 +72,10 @@ $(function(){
         this.width = width;
         this.height = height;
 
-        this.isInside = function(x, y, width, height){
-                    if (rect1.x < rect2.x + rect2.width &&
-           rect1.x + rect1.width > rect2.x &&
-           rect1.y < rect2.y + rect2.height &&
-           rect1.height + rect1.y > rect2.y) {
-            // collision detected!
+        this.isInside = function(x, y){
+            return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
         }
 
-        return this.x < x + width
-        }
     }
 
     var player = {
@@ -82,27 +85,26 @@ $(function(){
         y: map.height/2,
         step: 5,
         updatePosition: function(){
-            console.log(this.x,this.y);
             this.currentSprite = this.sprites.stand;
             if(keys.sprint){
-                this.step = 10;
+                this.step = 8;
             }else{
                 this.step = 5;
             }
-            if(keys.top && !keys.down){
-                this.y = Math.max(this.y - this.step, 0);
+            if(keys.top && !keys.down && map.isAllowed(this.x, this.y - this.step)){
+                this.y -= this.step;
                 this.currentSprite = this.sprites.top;
             }
-            if(keys.down && !keys.top){
-                this.y = Math.min(this.y + this.step, map.height - this.height);
+            if(keys.down && !keys.top && map.isAllowed(this.x, this.y + this.step)){
+                this.y += this.step;
                 this.currentSprite = this.sprites.down;
             }
-            if(keys.right && !keys.left){
-                this.x = Math.min(this.x + this.step, map.width - this.width);
+            if(keys.right && !keys.left && map.isAllowed(this.x + this.step, this.y)){
+                this.x += this.step;
                 this.currentSprite = this.sprites.right;
             }
-            if(keys.left && !keys.right){
-                this.x = Math.max(this.x - this.step, 0);
+            if(keys.left && !keys.right && map.isAllowed(this.x - this.step, this.y)){
+                this.x -= this.step;
                 this.currentSprite = this.sprites.left;
             }
         }
