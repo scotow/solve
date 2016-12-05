@@ -94,6 +94,7 @@ $(function(){
         this.answer = answer;
 
         this.ask = function(){
+            var self = this;
             swal({
                 title: "Problème informatique",
                 text: this.header,
@@ -103,7 +104,7 @@ $(function(){
                 closeOnConfirm: false,
                 closeOnCancel: false
             }, function(choice){
-                swal("Réponse", choice == this.answer ? "Bonne réponse." : "Mauvais réponse.");
+                swal("Réponse", choice == self.answer ? "Bonne réponse." : "Mauvais réponse.");
                 questionnaire.solved();
             });
         }
