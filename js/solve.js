@@ -95,7 +95,7 @@ $(function(){
 
         this.ask = function(){
             swal({
-                title: "Problême informatique",
+                title: "Problème informatique",
                 text: this.header,
                 showCancelButton: true,
                 confirmButtonText: "Vrai",
