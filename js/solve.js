@@ -111,7 +111,7 @@ $(function(){
 
     var questionnaire = new Questionnaire();
     questionnaire.questions.push(new Question("Peut-on stocker les mots de passe des utilisateurs en clair dans la base de données ?", false));
-    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussés pour apprendre les bases de l'informatique ?", false));
+    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussées pour apprendre les bases de l'informatique ?", false));
 
     var map = {
         width: canvas.width,
@@ -263,8 +263,13 @@ $(function(){
 
     $(window).keydown(function(event){
         keys.update(event.which, true);
-        if(event.which === 32 && map.aboveScreen.isInside(player.x, player.y) && questionnaire.actualQuestion){
-            questionnaire.prompt();
+        if(event.which === 32 && map.aboveScreen.isInside(player.x, player.y)){
+            if(questionnaire.actualQuestion){
+                questionnaire.prompt();
+            }else{
+                console.log("aez");
+                swal("RAS", "Aucun problème n'a été repéré sur le réseau. Essage de repasser plus tard.", "info");
+            }
         }
         return false;
     }).keyup(function(event){
