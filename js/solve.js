@@ -105,7 +105,7 @@ $(function(){
                 closeOnConfirm: false,
                 closeOnCancel: false
             }, function(choice){
-                var explanation = (choice == self.answer ? "Correct.\n" : "Incorrect.")+ self.explanation;
+                var explanation = (choice == self.answer ? "Correct." : "Incorrect.") + "\n" + self.explanation;
                 swal("Réponse", explanation);
                 questionnaire.solved();
             });
@@ -114,8 +114,8 @@ $(function(){
 
     var questionnaire = new Questionnaire();
     questionnaire.questions.push(new Question("Doit-on stocker les mots de passe des utilisateurs en clair dans la base de données ?", false, "En effet, il est dangereux de stocker les mots de passe en clair : en cas d'intrusion, les mots de passe ne sont pas exposés directement."));
-    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussées pour apprendre les bases de l'informatique ?", false, "C ma maman qui l'a dit"));
-    questionnaire.questions.push(new Question("lol", true, "Couou"));
+    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussées pour apprendre les bases de l'informatique ?", false, "Internet regorge de tutoriels en tout genre pour apprendre les bases de l'informatique."));
+    //questionnaire.questions.push(new Question("lol", true, "Couou"));
 
     var map = {
         width: canvas.width,
