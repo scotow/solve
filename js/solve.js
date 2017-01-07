@@ -89,8 +89,10 @@ $(function(){
 
     }
 
-    function Question(header, answer, explanation){
+    function Question(header, choice1, choice2, answer, explanation){
         this.header = header;
+        this.choice1 = choice1;
+        this.choice2 = choice2;
         this.answer = answer;
         this.explanation = explanation;
 
@@ -100,22 +102,32 @@ $(function(){
                 title: "Problème informatique",
                 text: this.header,
                 showCancelButton: true,
-                confirmButtonText: "Vrai",
-                cancelButtonText: "Faux",
+                confirmButtonText: this.choice2,
+                cancelButtonText: this.choice1,
                 closeOnConfirm: false,
                 closeOnCancel: false
             }, function(choice){
-                var explanation = (choice == self.answer ? "Correct." : "Incorrect.") + "\n" + self.explanation;
-                swal("Réponse", explanation);
-                questionnaire.solved();
+                var explanation = (choice != self.answer ? "Correct." : "Incorrect.") + "\n" + self.explanation;
+                swal({
+                    title: "Réponse",
+                    text: explanation
+                }, function(){
+                    questionnaire.solved();
+                });
+
             });
         }
     }
 
     var questionnaire = new Questionnaire();
-    questionnaire.questions.push(new Question("Doit-on stocker les mots de passe des utilisateurs en clair dans la base de données ?", false, "En effet, il est dangereux de stocker les mots de passe en clair : en cas d'intrusion, les mots de passe ne sont pas exposés directement."));
-    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussées pour apprendre les bases de l'informatique ?", false, "Internet regorge de tutoriels en tout genre pour apprendre les bases de l'informatique."));
-    //questionnaire.questions.push(new Question("lol", true, "Couou"));
+    questionnaire.questions.push(new Question("Doit-on stocker les mots de passe des utilisateurs en clair dans la base de données ?", "Vrai", "Faux", false, "En effet, il est dangereux de stocker les mots de passe en clair : en cas d'intrusion, les mots de passe ne sont pas exposés directement."));
+    questionnaire.questions.push(new Question("Est-il nécessaire de faire des études poussées pour apprendre l'informatique ?", "Vrai", "Faux", false, "Internet regorge de tutoriels en tout genre pour apprendre les bases de l'informatique."));
+    questionnaire.questions.push(new Question("Est-ce qu'un administrateur système doit avoir des connaissances en développement ?", "Oui", "Non", true, "Il est important qu'il ait des connaissances en développement car il doit savoir faire des scripts et faire de l'automatisation."));
+    questionnaire.questions.push(new Question("Est-ce qu'il y a beaucoup de différence entre un administrateur et un administrateur réseaux ?", "Oui", "Non", false, "Il est vrai que ces deux métiers sont différents, mais en terme de compétences, ils se ressemblent et souvent, c'est la même personne qui exerce ces deux fonctions dans une entreprise."));
+    questionnaire.questions.push(new Question("Quel est le salaire annuel moyen d'un administrateur reseaux / système débutant ?", "22 000€ - 35 000€", "30 000€ - 45 000€", false, "En general, le metier d'administrateur système et réseaux est plutôt bien payé meme au début, par contre l'inconvéniant est que les entreprises préfères recruter des personnes d'expériences."));
+    questionnaire.questions.push(new Question("Quel est le niveau d'étude demandé pour exercer la fonction d'administrateur système et réseaux ?", "Bac +2", "Bac +5", false, "En général, les entreprises demandent un niveau bac +5, que ce soit école d'ingénieur ou master, mais il peut y avoir des exceptions."));
+    questionnaire.questions.push(new Question("Est-ce que l'on peut être amené à faire de l'astreinte dans le métier d'administrateur réseaux et systèmes ?", "Oui", "Non", true, "En effet beaucoup d'entreprises demandent de l'astreinte, car il faut pouvoir intervenir sur divers problèmes le plus rapidement possible même pendant la nuit."));
+    questionnaire.questions.push(new Question("Une fois un système réseau mis en place et sécurisé, des nouvelles failles peuvent-elles survenir ?", "Oui", "Non", true, "Ce domaine informatique est en constante évolution, c'est-à-dire qu'il y aura toujours des personnes pour trouver des failles de sécurité, donc aucun système n'est définitif. Il faudra toujours le faire évoluer."));
 
     var map = {
         width: canvas.width,
